@@ -43,7 +43,7 @@ public class GameFrame extends GameObject {
 	private int startX = 22; //starting position of buffer
 	private int endX = 582; //end position of buffer
 	private int lowerRange = 481; //lower range of score area
-	private int upperRange = 508; //upper range of score area
+	private int upperRange = 540; //upper range of score area
 	
 	boolean created = false;
 	
@@ -105,10 +105,7 @@ public class GameFrame extends GameObject {
 			arrows[i] = new Block(getImage(assignArrows(rand)), x, 242);
 			x += 85;
 			ARROWS.add(arrows[i]);
-			
-			System.out.print(rand + " ");
 		}
-		System.out.println();
 	}
 	
 	public String assignArrows(int x) {
@@ -170,13 +167,9 @@ public class GameFrame extends GameObject {
 		}
 		else if (keyPressed(KeyEvent.VK_SPACE)) {
 			if (counter == 7 && lowerRange < buffer.getX() && buffer.getX() < upperRange) {				
-				getScore();
-				
-				System.out.println();
-				System.out.println(score);
-				System.out.println();
-				
+				getScore();				
 				createSet();
+				System.out.println(score);
 			}
 			else {
 				createSet();
