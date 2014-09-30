@@ -6,16 +6,25 @@ import java.awt.event.KeyEvent;
 import com.golden.gamedev.GameEngine;
 import com.golden.gamedev.GameObject;
 import com.golden.gamedev.object.SpriteGroup;
+import com.golden.gamedev.object.Timer;
 
 public class GameFrame extends GameObject {
 	
 	private String BG = "./resources/img/bg.png";
+	private String BUFFER = "./resources/img/buffer.png";
+	private String HIT = "./resources/img/hit.png";
+	
 	private String UP = "./resources/img/up.png";
 	private String DOWN = "./resources/img/down.png";
 	private String LEFT = "./resources/img/left.png";
 	private String RIGHT = "./resources/img/right.png";
-	private String BUFFER = "./resources/img/buffer.png";
-	private String HIT = "./resources/img/hit.png";
+	
+	private String UP2 = "./resources/img/up2.png";
+	private String DOWN2 = "./resources/img/down2.png";
+	private String LEFT2 = "./resources/img/left2.png";
+	private String RIGHT2 = "./resources/img/right2.png";
+	
+	private int dimension = 10;
 	
 	private Block background;
 	private Block hit;
@@ -27,6 +36,19 @@ public class GameFrame extends GameObject {
 	private SpriteGroup ARROWS;
 	
 	private int pressed = 0;
+	private int counter = 0; //increments when you typed correctly
+	
+	private int score = 0;
+	
+	private int startX = 22; //starting position of buffer
+	private int endX = 582; //end position of buffer
+	private int lowerRange = 481; //lower range of score area
+	private int upperRange = 508; //upper range of score area
+	
+	boolean created = false;
+	
+	private int speed;
+	private Timer delay;
 
 	public GameFrame(GameEngine parent) {
 		super(parent);
@@ -36,7 +58,10 @@ public class GameFrame extends GameObject {
 	public void initResources() {
 		background = new Block(getImage(BG), 0, 0);
 		hit = new Block(getImage(HIT), 481, 352);
-		buffer = new Block(getImage(BUFFER), 20, 352);
+		buffer = new Block(getImage(BUFFER), startX, 352);
+		
+		speed = Arrows.speed;
+		delay = new Timer(speed);
 		
 		createSet();
 	}
@@ -51,6 +76,10 @@ public class GameFrame extends GameObject {
 
 	@Override
 	public void update(long l) {
+		
+		if (delay.action(l))
+			moveBuffer();
+		
 		readInput();
 		
 		background.update(l);
@@ -59,13 +88,15 @@ public class GameFrame extends GameObject {
 		ARROWS.update(l);
 	}
 	
-	public void createSet() {
+	//creating a random set of arrows
+	public void createSet() { 
 		int max = 4;
 		int min = 1;
 		int range = max - min + 1;
 		int rand;
 		int x = 26;
 		
+		counter = 0;
 		ARROWS = new SpriteGroup("Arrows");
 		
 		for (int i = 0; i < 7; i++) {
@@ -74,7 +105,10 @@ public class GameFrame extends GameObject {
 			arrows[i] = new Block(getImage(assignArrows(rand)), x, 242);
 			x += 85;
 			ARROWS.add(arrows[i]);
+			
+			System.out.print(rand + " ");
 		}
+		System.out.println();
 	}
 	
 	public String assignArrows(int x) {
@@ -93,14 +127,131 @@ public class GameFrame extends GameObject {
 	}
 	
 	public void readInput() {
-		if (keyPressed(KeyEvent.VK_UP))
-			pressed = 1;
-		else if (keyPressed(KeyEvent.VK_RIGHT))
-			pressed = 2;
-		else if (keyPressed(KeyEvent.VK_DOWN))
-			pressed = 3;
-		else if (keyPressed(KeyEvent.VK_LEFT))
-			pressed = 4;
+		if (keyPressed(KeyEvent.VK_UP)) {
+			if (counter == 7) {
+				counter = 0;
+				resetArrows();
+			}
+			else {
+				pressed = 1;
+				checkInput();
+			}
+			
+		}
+		else if (keyPressed(KeyEvent.VK_RIGHT)) {
+			if (counter == 7) {
+				counter = 0;
+				resetArrows();
+			}
+			else {
+				pressed = 2;
+				checkInput();
+			}
+		}
+		else if (keyPressed(KeyEvent.VK_DOWN)) {
+			if (counter == 7) {
+				counter = 0;
+				resetArrows();
+			}
+			else {
+				pressed = 3;
+				checkInput();
+			}
+		}
+		else if (keyPressed(KeyEvent.VK_LEFT)) {
+			if (counter == 7) {
+				counter = 0;
+				resetArrows();
+			}
+			else {
+				pressed = 4;
+				checkInput();
+			}
+		}
+		else if (keyPressed(KeyEvent.VK_SPACE)) {
+			if (counter == 7 && lowerRange < buffer.getX() && buffer.getX() < upperRange) {				
+				getScore();
+				
+				System.out.println();
+				System.out.println(score);
+				System.out.println();
+				
+				createSet();
+			}
+			else {
+				createSet();
+			}
+		}
+		
+	}
+	
+	public void checkInput() {
+		switch(pressed) {
+			case 1: 
+				if (arrowsID[counter] == 1) {
+					arrows[counter].setImage(getImage(UP2));
+					counter++;
+				}
+				else {
+					counter = 0;
+					resetArrows();
+				}
+				break;
+			case 2:
+				if (arrowsID[counter] == 2) {
+					arrows[counter].setImage(getImage(RIGHT2));
+					counter++;
+				}
+				else {
+					counter = 0;
+					resetArrows();
+				}
+				break;
+			case 3:
+				if (arrowsID[counter] == 3) {
+					arrows[counter].setImage(getImage(DOWN2));
+					counter++;
+				}
+				else {
+					counter = 0;
+					resetArrows();
+				}
+				break;
+			case 4:
+				if (arrowsID[counter] == 4) {
+					arrows[counter].setImage(getImage(LEFT2));
+					counter++;
+				}
+				else {
+					counter = 0;
+					resetArrows();
+				}
+				break;
+		}
+	}
+	
+	public void resetArrows() {
+		for (int i = 0; i < 7; i++) {
+			arrows[i].setImage(getImage(assignArrows(arrowsID[i])));
+		}
+	}
+	
+	public void moveBuffer() {
+		if (buffer.getX() < endX) {
+			buffer.setX(buffer.getX() + dimension);
+		}
+		else {
+			buffer.setX(startX);
+			created = false;
+		}
+		
+		if (buffer.getX() > upperRange && created == false) {
+			created = true;
+			createSet();
+		}
 	}
 
+	public void getScore() {
+		score += 100;
+	}
 }

@@ -85,14 +85,14 @@ public class IntroMenu extends GameObject {
 	public void selection() {
 		if (play == true) {
 			switch(levelPressed) {
-				case 1: Arrows.speed = 250;
+				case 1: Arrows.speed = 60;
 					parent.nextGameID = 1;
 					break;
-				case 2: Arrows.speed = 200;
-					parent.nextGameID = 2;
+				case 2: Arrows.speed = 50;
+					parent.nextGameID = 1;
 					break;
-				case 3: Arrows.speed = 150;
-					parent.nextGameID = 3;
+				case 3: Arrows.speed = 40;
+					parent.nextGameID = 1;
 					break;
 			}			
 			finish();
