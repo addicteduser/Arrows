@@ -7,6 +7,8 @@ import com.golden.gamedev.GameLoader;
 import com.golden.gamedev.GameObject;
 
 public class Arrows extends GameEngine {
+	
+	public static int speed;
 
 	@Override
 	public GameObject getGame(int gameID) {
