@@ -11,8 +11,7 @@ import com.golden.gamedev.GameObject;
 public class Arrows extends GameEngine {
 	
 	public static int speed;
-    public static int levelselected;
-    
+        public static int levelselected;
 	@Override
 	public GameObject getGame(int gameID) {
 		switch (gameID) {
