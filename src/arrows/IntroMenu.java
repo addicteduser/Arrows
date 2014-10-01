@@ -27,6 +27,7 @@ public class IntroMenu extends GameObject {
 	public void initResources() {
 		background = new Block(getImage(HEADER), 0, 0);
 		level = new Block(getImage(LEVEL1), 0, 0);
+                playMusic("./resources/snd/KH_DEARLY.mid");
 	}
 
 	@Override
@@ -46,6 +47,7 @@ public class IntroMenu extends GameObject {
 	public void ReadInput() {
 		if (keyPressed(KeyEvent.VK_UP)) {
 			play = false;
+                        playSound("./resources/snd/Click.wav");
 			switch(levelPressed) {
 				case 1: levelPressed = 1;
 					break;
@@ -57,7 +59,8 @@ public class IntroMenu extends GameObject {
 			
 		} else if (keyPressed(KeyEvent.VK_DOWN)) {
 			play = false;
-			switch(levelPressed) {
+			playSound("./resources/snd/Click.wav");
+                        switch(levelPressed) {
 				case 1: levelPressed = 2;
 					break;
 				case 2: levelPressed = 3;
@@ -68,6 +71,7 @@ public class IntroMenu extends GameObject {
 			
 		} else if (keyPressed(KeyEvent.VK_ENTER)) {
 			play = true;
+                        playSound("./resources/snd/Recruitment.wav");
 		}
 	}
 	
@@ -86,12 +90,15 @@ public class IntroMenu extends GameObject {
 		if (play == true) {
 			switch(levelPressed) {
 				case 1: Arrows.speed = 60;
+                                        Arrows.levelselected = 1;
 					parent.nextGameID = 1;
 					break;
 				case 2: Arrows.speed = 50;
+                                        Arrows.levelselected = 2;
 					parent.nextGameID = 1;
 					break;
 				case 3: Arrows.speed = 40;
+                                        Arrows.levelselected = 3;
 					parent.nextGameID = 1;
 					break;
 			}			

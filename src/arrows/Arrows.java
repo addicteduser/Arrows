@@ -11,7 +11,8 @@ import com.golden.gamedev.GameObject;
 public class Arrows extends GameEngine {
 	
 	public static int speed;
-
+    public static int levelselected;
+    
 	@Override
 	public GameObject getGame(int gameID) {
 		switch (gameID) {
@@ -33,7 +34,7 @@ public class Arrows extends GameEngine {
 
 /*
  * WHAT ELSE DO WE NEED?
- * -GAME OVER SCREEN & DURATION OF THE GAME
+ * -GAME OVER SCREEN
  * -SOME POP OUT MESSAGE/TEXT/IMAGE INDICATING WHAT KIND OF SCORE DID YOU GET
  * 		EX. PERFECT / WOW! EXACT MUCH
  * 			GREAT / MEDJO OFF BEAT LANG

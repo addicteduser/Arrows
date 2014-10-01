@@ -24,6 +24,10 @@ public class GameFrame extends GameObject {
 	private String LEFT2 = "./resources/img/left2.png";
 	private String RIGHT2 = "./resources/img/right2.png";
 	
+    private String MUSIC1 = "./resources/snd/piano_introduction.mid";
+    private String MUSIC2 = "./resources/snd/terra_no_kesshin.mid";
+    private String MUSIC3 = "./resources/snd/ffxiii_flash.mid";
+               
 	private int dimension = 10;
 	
 	private Block background;
@@ -39,14 +43,17 @@ public class GameFrame extends GameObject {
 	private int counter = 0; //increments when you typed correctly
 	
 	private int score = 0;
+        
 	
 	private int startX = 22; //starting position of buffer
 	private int endX = 582; //end position of buffer
-	private int lowerRange = 481; //lower range of score area
+	private int lowerRange = 450; //lower range of score area
 	private int upperRange = 540; //upper range of score area
-	
+	private int range = (upperRange-lowerRange)/7;
+        
 	boolean created = false;
-	
+    boolean scored = false;
+
 	private int speed;
 	private Timer delay;
 
@@ -62,7 +69,13 @@ public class GameFrame extends GameObject {
 		
 		speed = Arrows.speed;
 		delay = new Timer(speed);
-		
+		if(Arrows.levelselected == 1)
+                    playMusic(MUSIC1);
+                else if(Arrows.levelselected == 2)
+                    playMusic(MUSIC2);
+                else if(Arrows.levelselected == 3)
+                    playMusic(MUSIC3);
+                
 		createSet();
 	}
 
@@ -76,12 +89,10 @@ public class GameFrame extends GameObject {
 
 	@Override
 	public void update(long l) {
-		
 		if (delay.action(l))
 			moveBuffer();
 		
 		readInput();
-		
 		background.update(l);
 		hit.update(l);
 		buffer.update(l);
@@ -124,6 +135,7 @@ public class GameFrame extends GameObject {
 	}
 	
 	public void readInput() {
+            
 		if (keyPressed(KeyEvent.VK_UP)) {
 			if (counter == 7) {
 				counter = 0;
@@ -166,13 +178,17 @@ public class GameFrame extends GameObject {
 			}
 		}
 		else if (keyPressed(KeyEvent.VK_SPACE)) {
-			if (counter == 7 && lowerRange < buffer.getX() && buffer.getX() < upperRange) {				
+            playSound("./resources/snd/Click.wav");
+            
+			if (counter == 7 && lowerRange < buffer.getX() && buffer.getX() < upperRange) {	
 				getScore();				
 				createSet();
-				System.out.println(score);
+                scored = true;
+                System.out.println(score);
 			}
 			else {
-				createSet();
+				System.out.println("Miss");
+				resetArrows();
 			}
 		}
 		
@@ -227,6 +243,7 @@ public class GameFrame extends GameObject {
 		for (int i = 0; i < 7; i++) {
 			arrows[i].setImage(getImage(assignArrows(arrowsID[i])));
 		}
+        scored = false;
 	}
 	
 	public void moveBuffer() {
@@ -236,15 +253,39 @@ public class GameFrame extends GameObject {
 		else {
 			buffer.setX(startX);
 			created = false;
+			scored = false;
 		}
 		
 		if (buffer.getX() > upperRange && created == false) {
+			
 			created = true;
 			createSet();
+                    
+            if (counter < 7 && scored == false) {
+                System.out.println("Miss");
+            }
+                        
 		}
 	}
 
 	public void getScore() {
-		score += 100;
-	}
+        if(buffer.getX() >= lowerRange && buffer.getX() <= lowerRange + range || buffer.getX() <= upperRange && buffer.getX() >= upperRange - range) {
+            System.out.println("BAD");
+            score += 25;
+        }
+        else if(buffer.getX() >= lowerRange && buffer.getX() <= lowerRange + range * 2 || buffer.getX() <= upperRange && buffer.getX() >= upperRange - range *2) {
+            System.out.println("COOL");
+            score += 50;
+        }
+        else if(buffer.getX() >= lowerRange && buffer.getX() <= lowerRange + range * 3 || buffer.getX() <= upperRange && buffer.getX() >= upperRange - range *3) {
+            System.out.println("GREAT");
+            score += 75;
+        }
+        else if(buffer.getX() >= lowerRange && buffer.getX() <= lowerRange + range * 4 || buffer.getX() <= upperRange && buffer.getX() >= upperRange - range *4) {
+            System.out.println("PERFECT");
+            score += 100;
+        }
+            
+    }
+        
 }
