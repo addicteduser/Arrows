@@ -1,13 +1,15 @@
 package arrows;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
 import com.golden.gamedev.GameEngine;
 import com.golden.gamedev.GameObject;
+import com.golden.gamedev.object.font.SystemFont;
 
 public class IntroMenu extends GameObject {
-	
 	private String HEADER = "./resources/img/header.png";
 	private String LEVEL1 = "./resources/img/level1.png";
 	private String LEVEL2 = "./resources/img/level2.png";
@@ -19,6 +21,8 @@ public class IntroMenu extends GameObject {
 	private int levelPressed = 1;
 	private boolean play = false;
 	
+	private SystemFont font;
+	
 	public IntroMenu(GameEngine parent) {
 		super(parent);
 	}
@@ -27,14 +31,17 @@ public class IntroMenu extends GameObject {
 	public void initResources() {
 		background = new Block(getImage(HEADER), 0, 0);
 		level = new Block(getImage(LEVEL1), 0, 0);
+		font = new SystemFont(new Font("VCR OSD MONO", Font.PLAIN, 36), Color.BLACK);
 	}
 
 	@Override
 	public void render(Graphics2D gd) {
 		background.render(gd);
 		level.render(gd);
+		
+		font.drawString(gd, "SCORE", 0, 0);
 	}
-
+	
 	@Override
 	public void update(long l) {
 		background.update(l);
@@ -85,13 +92,19 @@ public class IntroMenu extends GameObject {
 	public void selection() {
 		if (play == true) {
 			switch(levelPressed) {
-				case 1: Arrows.speed = 60;
+				case 1:
+					//Arrows.speed = 60;
+					Arrows.speed = 100;
 					parent.nextGameID = 1;
 					break;
-				case 2: Arrows.speed = 50;
+				case 2:
+					//Arrows.speed = 50;
+					Arrows.speed = 80;
 					parent.nextGameID = 1;
 					break;
-				case 3: Arrows.speed = 40;
+				case 3:
+					//Arrows.speed = 40;
+					Arrows.speed = 60;
 					parent.nextGameID = 1;
 					break;
 			}			

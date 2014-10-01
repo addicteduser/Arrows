@@ -49,6 +49,9 @@ public class GameFrame extends GameObject {
 	
 	private int speed;
 	private Timer delay;
+	
+	private int secCtr;
+	private Timer secTimer;
 
 	public GameFrame(GameEngine parent) {
 		super(parent);
@@ -62,6 +65,9 @@ public class GameFrame extends GameObject {
 		
 		speed = Arrows.speed;
 		delay = new Timer(speed);
+		
+		secCtr = 60;
+		secTimer = new Timer(1000);
 		
 		createSet();
 	}
@@ -77,6 +83,9 @@ public class GameFrame extends GameObject {
 	@Override
 	public void update(long l) {
 		
+		if (secTimer.action(l))
+			displayTime();
+		
 		if (delay.action(l))
 			moveBuffer();
 		
@@ -86,6 +95,11 @@ public class GameFrame extends GameObject {
 		hit.update(l);
 		buffer.update(l);
 		ARROWS.update(l);
+	}
+	
+	public void displayTime() {
+		System.out.println(secCtr);
+		secCtr--;
 	}
 	
 	//creating a random set of arrows
